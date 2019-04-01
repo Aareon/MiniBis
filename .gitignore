@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# IDE/Editor stuff
+.vscode/
+
+# Project dynamic files
+ledger/
+mempool.log
+node.log
+peers.json
