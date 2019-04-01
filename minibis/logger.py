@@ -29,7 +29,7 @@ def get_logger(
     :returns: logging.Logger
     """
     logger = logging.getLogger(f"{name}")
-    level = logging._nameToLevel.get(level.lower(), logging.DEBUG))
+    level = logging._nameToLevel.get(level.lower(), logging.DEBUG)
 
     logger.setLevel(level)
     formatter = logging.Formatter(
