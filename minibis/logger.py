@@ -1,11 +1,19 @@
 import logging
+import pathlib  # for type annotations
 import sys
+from pathlib import Path
+from typing import Union
 
 py_ver = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+SRC_PATH = Path(__file__).parent.parent
 
 
 def get_logger(
-    name: str, level: str = "debug", file: bool = True, stream: bool = True
+    name: str,
+    level: str = "debug",
+    file: bool = True,
+    file_path: Union[pathlib.Path, str] = None,
+    stream: bool = True
 ) -> logging.Logger:
     """Create a new logger with a given name and logging level
 
@@ -21,17 +29,7 @@ def get_logger(
     :returns: logging.Logger
     """
     logger = logging.getLogger(f"{name}")
-
-    if level.lower() == "debug":
-        level = logging.DEBUG
-    elif level.lower() == "info":
-        level = logging.INFO
-    elif level.lower() == "warning":
-        level = logging.WARNING
-    elif level.lower() == "error":
-        level = logging.ERROR
-    else:
-        level = logging.DEBUG
+    level = logging._nameToLevel.get(level.lower(), logging.DEBUG))
 
     logger.setLevel(level)
     formatter = logging.Formatter(
@@ -39,7 +37,20 @@ def get_logger(
     )
 
     if file:
-        file_handler = logging.FileHandler(f"{name}.log")
+        # properly handle file storage
+        if file_path is None:
+            SRC_PATH.joinpath(f"logs/{name}.log")  # MiniBis/logs/
+        elif isinstance(file_path, str):
+            file_path = Path(file_path)
+
+        if not file_path.is_absolute():
+            # we need to decide what directory to store the file in
+            file_path = SRC_path.joinpath(file_path)
+        if file_path.name == "":
+            # no filename, we'll need to provide one
+            file_path = file_path.joinpath(f"{name}.log")
+
+        file_handler = logging.FileHandler(file_path.resolve())
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
