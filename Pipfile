@@ -9,6 +9,7 @@ flake8 = "*"
 
 [packages]
 requests = "*"
+urllib3 = ">=1.24.2"
 
 [requires]
 python_version = "3.7"
